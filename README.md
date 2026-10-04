@@ -47,6 +47,33 @@ Platform settings needed after `flutter create`:
 2. Partner A copies the **household code** from Settings and sends it to Partner B.
 3. Partner B signs in, picks **Join partner** and pastes the code. A household can have at most two members.
 
+## Installing on phones (no app stores)
+
+### Android: Firebase App Distribution
+
+Every push to `main` runs the workflow in [.github/workflows/build.yml](.github/workflows/build.yml). It builds a signed APK and uploads it to Firebase App Distribution. Testers in the `family` group get an email for the first build and a notification in the **Firebase App Tester** app for each update after that.
+
+One-time setup:
+
+1. **Signing key:** run `scripts/setup-android-signing.sh`. It creates the keystore in `~/.config/home-expense/` and saves it to GitHub Secrets. Back that folder up.
+2. **CI credentials:** in Google Cloud Console → IAM & Admin → Service Accounts (project `my-home-expense`), create a service account with the role **Firebase App Distribution Admin**. Create a JSON key for it, then run:
+   `gh secret set FIREBASE_SERVICE_ACCOUNT < path/to/key.json`. Delete the JSON file afterwards.
+3. **Testers:** in Firebase Console → App Distribution, click **Get started** if you see it, then run:
+   ```bash
+   firebase appdistribution:group:create "Family" family --project my-home-expense
+   firebase appdistribution:testers:add --group-alias family wife@example.com --project my-home-expense
+   ```
+4. **On the Android phone:** open the invite email, accept it, install the App Tester app, and allow installs from unknown sources when the phone asks.
+
+### iPhone: free Apple ID, installed from this Mac
+
+Apple doesn't let CI install apps signed with a free account, so CI only checks that the iOS build compiles. Install from the Mac:
+
+1. Open `ios/Runner.xcworkspace` in Xcode. Under **Runner → Signing & Capabilities**, set **Team** to your Personal Team (Xcode → Settings → Accounts → add your Apple ID).
+2. On the iPhone, turn on **Settings → Privacy & Security → Developer Mode** and restart. Connect the iPhone by cable and tap **Trust**.
+3. Run `flutter run --release` and pick the iPhone. After the first install, open **Settings → General → VPN & Device Management** and trust your developer certificate.
+4. **The app stops opening after 7 days.** Run step 3 again to renew it. Your data is safe because it lives in Firestore. After the first cable install you can enable **Connect via network** in Xcode → Window → Devices and Simulators, so later installs work over Wi-Fi.
+
 ## Data model (Firestore)
 
 ```
