@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "786296284934",
+    "project_id": "my-home-expense",
+    "storage_bucket": "my-home-expense.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786296284934:android:bcbe5e5e840941e7576087",
+        "android_client_info": {
+          "package_name": "com.faheem.home_expense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1n70_2Mz2AsBTGk9zf5rypCv2RzT2FDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
